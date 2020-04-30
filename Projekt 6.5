@@ -17,13 +17,12 @@ def data_ziskat():
     #df2 = pd.read_csv('combined_data_2.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
     #df3 = pd.read_csv('combined_data_3.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
     #df4 = pd.read_csv('combined_data_4.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
-    neco = 15
     return df1,df2, df3, df4
 
 def data_sjednotit(df1):
-    df = df1#.append(df2)
-    #df = df.append(df3)
-    #df = df.append(df4)
+    df = df1.append(df2)
+    df = df.append(df3)
+    df = df.append(df4)
     return df
 
 if __name__ == "__main__":
