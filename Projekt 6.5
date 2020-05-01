@@ -7,25 +7,24 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from surprise import Reader, Dataset, SVD
 def main():
-    df1= data_ziskat()
+    df1, df2, df3, df4= data_ziskat()
     df = data_sjednotit(df1)
     df = pridat_movie_ID(df)
-    #df = honoceni_graf(df)
-    #df_title = nazvy_pridat()
+    #hodnoceni_graf(df)
     film = input("Jaký film z databáze se vám líbil?")
     recommend(df, film, 0)
 def data_ziskat():
     df1 = pd.read_csv('combined_data_1.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
-    #df2 = pd.read_csv('combined_data_2.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
-    #df3 = pd.read_csv('combined_data_3.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
-    #df4 = pd.read_csv('combined_data_4.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
-    return df1
-def data_sjednotit(df1):
-    df = df1#.append(df2)
-    #df = df.append(df3)
-    #df = df.append(df4)
+    df2 = pd.read_csv('combined_data_2.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
+    df3 = pd.read_csv('combined_data_3.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
+    df4 = pd.read_csv('combined_data_4.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
+    return df1, df2, df3, df4
+def data_sjednotit(df1, df2, df3, df4):
+    df = df1.append(df2)
+    df = df.append(df3)
+    df = df.append(df4)
     return df 
-def honoceni_graf(df):
+def hodnoceni_graf(df):
     p = df.groupby('Rating')['Rating'].agg(['count'])
     movie_count = df.isnull().sum()[1]
     cust_count = df['Cust_Id'].nunique() - movie_count
