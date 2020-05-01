@@ -1,4 +1,4 @@
- import pandas as pd
+import pandas as pd
 import numpy as np
 import math
 import re
@@ -19,7 +19,6 @@ def data_ziskat():
     #df2 = pd.read_csv('combined_data_2.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
     #df3 = pd.read_csv('combined_data_3.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
     #df4 = pd.read_csv('combined_data_4.txt', header= None, names= ['Cust_Id', 'Rating'], usecols= [0,1])
-    #neco = 15
     return df1
 def data_sjednotit(df1):
     df = df1#.append(df2)
@@ -82,7 +81,7 @@ def recommend(df, movie_title, min_count=0):
     df_title.set_index('Movie_Id', inplace=True)
     print(df_title.head(10))
     print("For movie ({})".format(movie_title))
-    print("- Top 10 movies recommended based on Pearsons'R correlation - ")
+    print("- Top 10 filmů doporučených pro Vás - ")
     i = int(df_title.index[df_title['Name'] == movie_title][0])
     target = df_p[i]
     similar_to_target = df_p.corrwith(target)
