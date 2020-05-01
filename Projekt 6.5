@@ -8,7 +8,7 @@ import seaborn as sns
 from surprise import Reader, Dataset, SVD
 def main():
     df1, df2, df3, df4= data_ziskat()
-    df = data_sjednotit(df1)
+    df = data_sjednotit(df1, df2, df3, df4)
     df = pridat_movie_ID(df)
     #hodnoceni_graf(df)
     film = input("Jaký film z databáze se vám líbil?")
