@@ -14,7 +14,7 @@ def main():
     #hodnoceni_graf(df)
     df = pridat_movie_ID(df)
     film = input("Jaký film z databáze se Vám líbil?")
-    recommend(df, film, 0)
+    recommend(df, film)
  #Hlavní funkce programu, která řídí celý jeho chod, s možností vykreslení grafu, ta je pro zvýšení rychlosti chodu pozastavena. Konečným výstupem funkce je 10 doporučených filmů.
  
 def data_ziskat():
@@ -67,7 +67,7 @@ def pridat_movie_ID(df):
     return df
  #Funkce přidává sloupec MovieID do databáze. Vstupem je databáze df a výstupem je aktualizovaná databáze df.
     
-def recommend(df, movie_title, min_count=0):
+def recommend(df, movie_title):
     f = ['count', 'mean']
     df_movie_summary = df.groupby('Movie_Id')['Rating'].agg(f)
     df_movie_summary.index = df_movie_summary.index.map(int)
@@ -101,8 +101,8 @@ def recommend(df, movie_title, min_count=0):
     corr_target = corr_target.sort_values('PearsonR', ascending = False)
     corr_target.index = corr_target.index.map(int)
     corr_target = corr_target.join(df_title).join(df_movie_summary)[['PearsonR', 'Name', 'count', 'mean']]
-    print(corr_target[corr_target['count']>min_count][:10].to_string(index=False))
-#Funkce zkvalitní databázi odstraněním filmů s příliš málo hodnoceními a také uživatele, kteří neposkytli dostatek hodnocení pro rychlejší běh programu. Dále načte názvy filmů z tabulky. Nakonec funkce poskytne pomocí pearsonovské korelace 10 filmů, které by se zákazníkovi mohly líbit, na základě jím vloženého filmu, o němž nám zákazník řekl, že se mu líbil. Vstupem funkce je databáze df, jméno filmu z databáze, který se zákazníkovi líbil a 
+    print(corr_target[corr_target['count']>0][:10].to_string(index=False))
+#Funkce zkvalitní databázi odstraněním filmů s příliš málo hodnoceními a také uživatele, kteří neposkytli dostatek hodnocení pro rychlejší běh programu. Dále načte názvy filmů z tabulky. Nakonec funkce poskytne pomocí pearsonovské korelace 10 filmů, které by se zákazníkovi mohly líbit, na základě jím vloženého filmu, o němž nám zákazník řekl, že se mu líbil. Vstupem funkce je databáze df a jméno filmu z databáze, který se zákazníkovi líbil. Výstupem je deset doporučených filmů.
     
 if __name__ == "__main__":
                 main()
