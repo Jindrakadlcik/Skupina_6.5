@@ -57,13 +57,9 @@ def pridat_movie_ID(df):
         movie_id += 1
     last_record = np.full((1, len(df) - df_nan.iloc[-1, 0] - 1), movie_id)
     movie_np = np.append(movie_np, last_record)
-    print('Movie numpy: {}'.format(movie_np))
-    print('Length: {}'.format(len(movie_np)))
     df = df[pd.notnull(df['Rating'])]
     df['Movie_Id'] = movie_np.astype(int)
     df['Cust_Id'] = df['Cust_Id'].astype(int)
-    print('-Dataset examples-')
-    print(df.iloc[::5000000, :])
     return df
  #Funkce přidává sloupec MovieID do databáze. Vstupem je databáze df a výstupem je aktualizovaná databáze df.
     
@@ -78,15 +74,9 @@ def recommend(df, movie_title):
     df_cust_summary.index = df_cust_summary.index.map(int)
     cust_benchmark = round(df_cust_summary['count'].quantile(0.7), 0)
     drop_cust_list = df_cust_summary[df_cust_summary['count'] < cust_benchmark].index
-    print('Customer minimum times of review: {}'.format(cust_benchmark))
-    print('Original Shape: {}'.format(df.shape))
     df = df[~df['Movie_Id'].isin(drop_movie_list)]
     df = df[~df['Cust_Id'].isin(drop_cust_list)]
-    print('After Trim Shape: {}'.format(df.shape))
-    print('-Data Examples-')
-    print(df.iloc[::5000000, :])
     df_p = pd.pivot_table(df, values='Rating', index='Cust_Id', columns='Movie_Id')
-    print(df_p.shape)
     df_p = pd.pivot_table(df, values='Rating', index='Cust_Id', columns='Movie_Id')
     df_title = pd.read_csv('movie_titles.csv', encoding="ISO-8859-1", header=None, names=['Movie_Id', 'Year', 'Name'])
     df_title.set_index('Movie_Id', inplace=True)
