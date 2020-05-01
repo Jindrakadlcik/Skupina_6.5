@@ -30,3 +30,40 @@ def pridat_movie_ID(df):
     print('-Dataset examples-')
     print(df.iloc[::5000000, :])
     return df
+def recommend(df, movie_title, min_count=0):
+    f = ['count', 'mean']
+    df_movie_summary = df.groupby('Movie_Id')['Rating'].agg(f)
+    df_movie_summary.index = df_movie_summary.index.map(int)
+    movie_benchmark = round(df_movie_summary['count'].quantile(0.7), 0)
+    drop_movie_list = df_movie_summary[df_movie_summary['count'] < movie_benchmark].index
+    print('Movie minimum times of review: {}'.format(movie_benchmark))
+    df_cust_summary = df.groupby('Cust_Id')['Rating'].agg(f)
+    df_cust_summary.index = df_cust_summary.index.map(int)
+    cust_benchmark = round(df_cust_summary['count'].quantile(0.7), 0)
+    drop_cust_list = df_cust_summary[df_cust_summary['count'] < cust_benchmark].index
+    print('Customer minimum times of review: {}'.format(cust_benchmark))
+    print('Original Shape: {}'.format(df.shape))
+    df = df[~df['Movie_Id'].isin(drop_movie_list)]
+    df = df[~df['Cust_Id'].isin(drop_cust_list)]
+    print('After Trim Shape: {}'.format(df.shape))
+    print('-Data Examples-')
+    print(df.iloc[::5000000, :])
+    df_p = pd.pivot_table(df, values='Rating', index='Cust_Id', columns='Movie_Id')
+    print(df_p.shape)
+    df_p = pd.pivot_table(df, values='Rating', index='Cust_Id', columns='Movie_Id')
+    df_title = pd.read_csv('movie_titles.csv', encoding="ISO-8859-1", header=None, names=['Movie_Id', 'Year', 'Name'])
+    df_title.set_index('Movie_Id', inplace=True)
+    print(df_title.head(10))
+    print("For movie ({})".format(movie_title))
+    print("- Top 10 movies recommended based on Pearsons'R correlation - ")
+    i = int(df_title.index[df_title['Name'] == movie_title][0])
+    target = df_p[i]
+    similar_to_target = df_p.corrwith(target)
+    corr_target = pd.DataFrame(similar_to_target, columns = ['PearsonR'])
+    corr_target.dropna(inplace = True)
+    corr_target = corr_target.sort_values('PearsonR', ascending = False)
+    corr_target.index = corr_target.index.map(int)
+    corr_target = corr_target.join(df_title).join(df_movie_summary)[['PearsonR', 'Name', 'count', 'mean']]
+    print(corr_target[corr_target['count']>min_count][:10].to_string(index=False))
+if __name__ == "__main__":
+                main()
