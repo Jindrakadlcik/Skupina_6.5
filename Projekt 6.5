@@ -69,7 +69,6 @@ def recommend(df, movie_title):
     df_movie_summary.index = df_movie_summary.index.map(int)
     movie_benchmark = round(df_movie_summary['count'].quantile(0.7), 0)
     drop_movie_list = df_movie_summary[df_movie_summary['count'] < movie_benchmark].index
-    print('Movie minimum times of review: {}'.format(movie_benchmark))
     df_cust_summary = df.groupby('Cust_Id')['Rating'].agg(f)
     df_cust_summary.index = df_cust_summary.index.map(int)
     cust_benchmark = round(df_cust_summary['count'].quantile(0.7), 0)
