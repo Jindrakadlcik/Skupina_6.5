@@ -80,7 +80,6 @@ def recommend(df, movie_title):
     df_p = pd.pivot_table(df, values='Rating', index='Cust_Id', columns='Movie_Id')
     df_title = pd.read_csv('movie_titles.csv', encoding="ISO-8859-1", header=None, names=['Movie_Id', 'Year', 'Name'])
     df_title.set_index('Movie_Id', inplace=True)
-    print(df_title.head(10))
     print("For movie ({})".format(movie_title))
     print("- Top 10 filmů doporučených pro Vás: - ")
     i = int(df_title.index[df_title['Name'] == movie_title][0])
